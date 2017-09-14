@@ -48,3 +48,6 @@
   width: 375px;
   height: 150px
 }
+.btn-change {
+  color:#f00
+}

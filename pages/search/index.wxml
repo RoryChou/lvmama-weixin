@@ -37,5 +37,8 @@
     </swiper-item>
   <!--</block>-->
 </swiper>
-<button bindtap="changeAuto">自动轮播</button>
+<button class="btn-change" bindtap="changeAuto">
+自动轮播
+<span>something</span>
+</button>
 <slider bindchange="intervalChange" show-value min="500" max="2000"/>调整间隔
