@@ -30,7 +30,7 @@
         "selectedIconPath": "images/order_fill.png"
       },
       {
-        "text": "发现",
+        "text": "电影",
         "pagePath": "pages/movie/movie",
         "iconPath": "images/live.png",
         "selectedIconPath": "images/live_fill.png"

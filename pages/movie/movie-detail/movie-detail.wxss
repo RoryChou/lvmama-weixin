@@ -208,3 +208,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.star{
+    width:12px;
+    height:14px;
+    vertical-align: top;
+}

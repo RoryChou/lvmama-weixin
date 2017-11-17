@@ -1,44 +1,25 @@
-<!--<view class="section">
-  <view class="content" hover='true' hover-class="red" hover-start-time="0" hover-stay-time="100">
-  view content!
-  </view>
-</view>
-<scroll-view scroll-y='false'  scroll-top="0" scroll-into-view="target" enable-back-to-top='true'>
-    <view class="top" style="height:800px">scroll!!</view>
-    <view class="target" id="target">target view</view>
-</scroll-view>-->
-<!--<view class="section">
-  <view class="section__title">vertical scroll</view>
-  <scroll-view scroll-y="true" style="height: 200px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-    <view id="green" class="scroll-view-item bc_green"></view>
-    <view id="red"  class="scroll-view-item bc_red"></view>
-    <view id="yellow" class="scroll-view-item bc_yellow"></view>
-    <view id="blue" class="scroll-view-item bc_blue"></view>
-  </scroll-view>
 
-  <view class="btn-area">
-    <button size="mini" bindtap="tap">click me to scroll into view </button>
-    <button size="mini" bindtap="tapMove">click me to scroll</button>
+<!--pages/movie/search/search.wxml-->
+<view class="container">
+  <view class="session-search session-search-spacing">
+    <icon class="search-icon" type="search" size="16"></icon>
+    <input class="search-content" placeholder-class="search-placeholder" bindinput="bindSearchInput" placeholder="搜索电影" value="{{searchValue}}" />
+    <block wx:if="{{showDelete}}">
+      <text class="search-delete" bindtap="bindSearchDelete">x</text>
+    </block>
+    <text class="search-cancel" bindtap="bindSearchCancel">取消</text>
+  </view>
+  <view class="session-movie">
+    <block wx:for="{{result.subjects}}" wx:for-item="item">
+      <view class="movie-wrapper" data-id="{{item.id}}" bindtap="handletap">
+        <view class="movie-content">
+          <image class="poster" src="{{item.images.small}}"></image>
+          <view class="summary">
+            <text class="name">{{item.title}}</text>
+            <text class="desc">{{item.summary}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
   </view>
 </view>
-<view class="section section_gap">
-  <view class="section__title">horizontal scroll</view>
-  <scroll-view class="scroll-view_H" scroll-x="true" style="width: 100%">
-    <view id="green" class="scroll-view-item_H bc_green"></view>
-    <view id="red"  class="scroll-view-item_H bc_red"></view>
-    <view id="yellow" class="scroll-view-item_H bc_yellow"></view>
-    <view id="blue" class="scroll-view-item_H bc_blue"></view>
-  </scroll-view>
-</view>-->
-<swiper indicator-dots='true' autoplay='{{autoplay}}' interval="{{interval}}">
-  <!--<block wx:for="{{imgUrls}}">-->
-    <swiper-item wx:for="{{imgUrls}}">
-      <image src="{{item}}" class="slide-image"/>
-    </swiper-item>
-  <!--</block>-->
-</swiper>
-<button class="btn-change" bindtap="changeAuto">
-自动轮播
-<span>something</span>
-</button>
-<slider bindchange="intervalChange" show-value min="500" max="2000"/>调整间隔

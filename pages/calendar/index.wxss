@@ -19,24 +19,31 @@
     flex-direction: column;
     min-height: 100%;
     margin-bottom: 10px;
-    border:1px solid #333;
+    
     opacity:0;
 }
 .inner-date{
     flex-grow: 1;
-    padding: 15px;
     border-bottom:1px solid #333;
+    padding-bottom: 20rpx;
+    width: 560rpx;
+    margin: 0 auto;
+    margin-bottom: 60rpx;
 }
 .date-year-month{
-    padding: 5px;
+    margin: 10rpx auto;
     text-align: center;
+    line-height: 60rpx;
+    height: 60rpx;
+    border-bottom:1px solid #333;
+    border-top:1px solid #333;
+    width: 560rpx;
 }
 .date-year-month text{
-    border-bottom:1px solid #333;
+    font-size: 14px;
+    padding: 0 26rpx;
 }
-.year-month{
-    padding-right:15px;
-}
+
 .date-day{
     text-align: center;
     font-size: 180px;
@@ -45,8 +52,9 @@
     letter-spacing: -5px;
 }
 .date-show-year{
-    color:#777;
     text-align: center;
+    font-size: 16px;
+    margin-bottom: 10rpx;
 }
 .date-directors{
     text-align: center;
@@ -57,24 +65,23 @@
     display:none;
 }
 .inner-comment{
-    width: 100%;
     padding: 10px;
-    font-style: italic;
-    color: #666;
+    color: #333;
+    font-size: 16px;
+    min-height: 140rpx;
 }
 .inner-comment text{
-    font-size: 30px;
     color:#888;
 }
 .inner-movie{
-  display: -webkit-flex;
-  display: flex;
   padding: 10px;
+  display: flex;
+  margin-left: 40rpx;
+ 
 }
 .movie-average{
     font-size:40px;
     line-height:40px;
-    letter-spacing: -5px;
     margin-right: 10px;
 }
 .star{
@@ -82,4 +89,8 @@
     height:16px;
     margin: 2px;
     vertical-align: top;
+}
+.inner-from {
+  margin-left: 20rpx;
+  font-size: 12px；
 }

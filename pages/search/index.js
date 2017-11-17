@@ -1,51 +1,104 @@
-// var order = ['red', 'yellow', 'blue', 'green', 'red']
-// Page({
-//   data: {
-//     toView: 'red',
-//     scrollTop: 100
-//   },
-//   upper: function(e) {
-//     console.log(e)
-//   },
-//   lower: function(e) {
-//     console.log(e)
-//   },
-//   scroll: function(e) {
-//     console.log(e)
-//   },
-//   tap: function(e) {
-//     for (var i = 0; i < order.length; ++i) {
-//       if (order[i] === this.data.toView) {
-//         this.setData({
-//           toView: order[i + 1]
-//         })
-//         break
-//       }
-//     }
-//   },
-//   tapMove: function(e) {
-//     this.setData({
-//       scrollTop: this.data.scrollTop + 10
-//     })
-//   }
-// })
+// pages/movie/search/search.js
+var app = getApp();
 Page({
-  data:{
-    imgUrls:[    'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-    ],
-    autoplay: true,
-    interval: 5000
+  data: {
+    searchValue: "",
+    showDelete: false,
+    result: {}
   },
-  changeAuto:function(e){
-    this.setData({
-      autoplay: !this.data.autoplay
-    })
+  onLoad: function (options) {
+    // 页面初始化 options为页面跳转所带来的参数
   },
-  intervalChange: function(e){
-    this.setData({
-      interval:e.detail.value
+  onReady: function () {
+    // 页面渲染完成
+  },
+  onShow: function () {
+    // 页面显示
+  },
+  onHide: function () {
+    // 页面隐藏
+  },
+  onUnload: function () {
+    // 页面关闭
+  },
+  /** 搜索影视 */
+  bindSearchInput: function (event) {
+    var value = event.detail.value;
+    var readyData = { showDelete: false };
+    if (value.length > 0) {
+      readyData = { showDelete: true };
+      this.handleSearchData(value);
+    }
+    this.setData(readyData);
+  },
+  /**清空输入框 */
+  bindSearchDelete: function (event) {
+    var readyData = { searchValue: "", showDelete: false, result: {} };
+    this.setData(readyData);
+  },
+  /**点击取消 */
+  bindSearchCancel: function (event) {
+    wx.navigateBack();
+  },
+  /** 提交搜索请求 */
+  handleSearchData: function (value) {
+    var that = this;
+    var serchURL = app.globalData.doubanBase + app.globalData.search + value + "&&start=0&&count=10";
+    wx.request({
+      url: serchURL,
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: { 'content-type': 'json' }, // 设置请求的 header
+      success: function (res) {
+        // success
+        var data = res.data;
+        that.processSearchData(data);
+        console.log(data)
+      },
+      fail: function () {
+        // fail
+      },
+      complete: function () {
+        // complete
+      }
+    });
+  },
+  /**组装搜索数据 */
+  processSearchData: function (data) {
+    var movies = [];
+    for (let idx in data.subjects) {
+      var subject = data.subjects[idx];
+      var directors = "";
+      var separate = " / ";
+      for (let i in subject.directors) {
+        directors += subject.directors[i].name + separate;
+      }
+      directors = directors.substring(0, directors.length - separate.length);
+      var summary = subject.rating.average + "分" + separate + subject.year + separate + directors;
+      var temp = {
+        id: subject.id,
+        casts: subject.casts,
+        collect_count: subject.collect_count,
+        directors: subject.directors,
+        title: subject.title,
+        images: subject.images,
+        rating: subject.rating,
+        year: subject.year,
+        summary: summary
+      };
+      movies.push(temp);
+    }
+    var readyData = {};
+    readyData["result"] = {
+      subjects: movies
+    }
+
+    this.setData(readyData);
+  },
+  /** 点击进入搜索条目 */
+  handletap: function (event) {
+    var id = event.currentTarget.dataset.id;
+    wx.redirectTo({
+      url: '/pages/movie/movie-detail/movie-detail?id=' + id
     })
   }
 })

@@ -3,7 +3,7 @@
 var app = getApp()
 Page({
   data: {
-    "year":0,
+    //"year":0,
     "month":0,
     "day":0,
     "week":0,
@@ -14,17 +14,20 @@ Page({
     "average":'',
     "stars":'',
     "loading_opacity": 1,
-    "animationData":''
+    "animationData":'',
+    "chineseDate": ''
   },
   //页面初次渲染完成
   onReady: function (e) {
     this.showDate();
     var _this = this,todayDate = this.data.year+''+this.data.month+''+this.data.day;
+    var today = new Date(),
+      todayDate = today.toLocaleDateString().replace(/\//g, '-');
     wx.getStorage({
       key: 'movie',
       success: function(res) {
-        // console.log(res.data)
         if(res.data.date==todayDate){
+          //wx.clearStorage(res.data.movieData)
           _this.setData(res.data.movieData);
           _this.loading();
         }else{
@@ -48,7 +51,7 @@ Page({
     }while(i<year.length)
     //设置数据
     _this.setData({
-       "year":chineseYear,
+       //"year":chineseYear,
        "month":app.chineseDate.months[today.getMonth()],
        "day":today.getDate(),
        "week":app.chineseDate.years[week] 
@@ -62,34 +65,56 @@ Page({
           start:Math.floor(Math.random()*250),
           count:1
         };
-    //发送请求，获取电影数据
+   
+    //获取电影数据
+    var today = new Date(), 
+      date = today.toLocaleDateString().replace(/\//g, '-');
+
     wx.request({
-      url:"http://localhost:5000",
-      data:reqData,
-      header:{
-        'Content-Type':'application/json'
-      },
-      success:function(res){
-        var movieData = res.data.subjects[0];
-        // console.log(movieData);
-        //设置数据，评分是整数需要补上小数点和0
-        var now = new Date(),thisYear = now.getFullYear();
-        var average = movieData.rating.average%1 === 0?movieData.rating.average+'.0':movieData.rating.average;
-        var date = _this.data.year+''+_this.data.month+''+_this.data.day,
-            renderData = {
-              "show_year":thisYear-movieData.year,
-              "comment":movieData.comment,
-              "directors":movieData.directors,
-              "title":movieData.title,
-              "average":average,
-              "stars":_this.starCount(movieData.rating.stars),
-              "loading_opacity": 0
-            };
+      url: "https://weixin.yijindaima.com?date=" + date,
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: { 'content-type': 'json' }, // 设置请求的 header
+      success: function (res) {
+        var todayData = res.data;
+        var renderData = {
+          "title": todayData.title,
+          "comment": todayData.comment,
+          "time": todayData.time,
+          "movie": todayData.movie,
+          "average": todayData.average,
+          "stars": _this.starCount(todayData.stars * 10),
+          "from": todayData.from,
+          "loading_opacity": 0,
+          "chineseDate": todayData.chineseDate
+        };
         _this.setData(renderData);
-        _this.storeData(date,renderData);
+        _this.storeData(date, renderData)
         _this.loading();
+      },
+      fail: function () {
+        // fail
+      },
+      complete: function () {
+        // complete
       }
     });
+
+    // var todayData = app.calendarData[date];
+    // var renderData = {
+    //   "title": todayData.title,
+    //   "comment": todayData.comment,
+    //   "time": todayData.time,
+    //   "movie": todayData.movie,
+    //   "average": todayData.average,
+    //   "stars": _this.starCount(todayData.stars*10),
+    //   "from": todayData.from,
+    //   "loading_opacity": 0,
+    //   "chineseDate": todayData.chineseDate
+    // };
+    // _this.setData(renderData);
+    // _this.loading();
+    
+    
   },
   //计算行星显示规则
   starCount:function(originStars){
@@ -128,5 +153,43 @@ Page({
         movieData:movieData
       }
     })
+  },
+  //点击日历电影
+  gotoDetail: function(event){
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000
+    });
+    var that = this;
+    var serchURL = app.globalData.doubanBase + app.globalData.search + event.currentTarget.dataset.name + "&&start=0&&count=10";
+    wx.request({
+      url: serchURL,
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: { 'content-type': 'json' }, // 设置请求的 header
+      success: function (res) {
+        // success
+        var data = res.data;
+        //判断是否有值
+        if (data.subjects.length !== 0){
+          that.processSearchData(data.subjects[0].id)
+        }
+        //that.processSearchData(data);
+        console.log(data)
+      },
+      fail: function () {
+        // fail
+      },
+      complete: function () {
+        // complete
+      }
+    });
+  },
+  //进入日历电影详情
+  processSearchData:function(id){
+    wx.hideToast();
+    wx.navigateTo({
+      url: '/pages/movie/movie-detail/movie-detail?id=' + id
+    });
   }
 })

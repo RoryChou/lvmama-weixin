@@ -102,7 +102,7 @@ Page({
   /** 滑动屏幕 */
   handleTouchMove: function (event) {
     var offsetTop = event.target.offsetTop;
-    console.log("handleTouchMove offsetTop: " + offsetTop);
+    //console.log("handleTouchMove offsetTop: " + offsetTop);
     if (offsetTop > 10 && !this.data.acquiredSelected) {
       this.getSelectedListData();
     }
@@ -112,7 +112,7 @@ Page({
     var that = this;
     // 豆瓣口碑榜，新片榜是高级接口，票房榜不可用，这里用豆瓣Top250数据 
     var top250URL = app.globalData.doubanBase + app.globalData.top250 + "?start=0&&count=12";
-    console.log("handleTouchMove top250URL: " + top250URL);
+    //console.log("handleTouchMove top250URL: " + top250URL);
     if (!this.data.acquiredSelected) {
       var readyData = {};
       readyData["acquiredSelected"] = {
